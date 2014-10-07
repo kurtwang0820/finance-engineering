@@ -33,14 +33,15 @@ def find_model(aList):
     i=0
     if len(aList)==1:
         one_slope_exist(aList)
-    #pre processing the first two slopes
-    process_first_two(aList)
-    #1(0,1)2(-1,0)3(0,-1)4(1,0)
-    for i in range(2,len(aList)):
-        if aList[i].slope-aList[i-1].slope<0:
-            output.append(FinModel(0,-1,aList[i].start,aList[i-1].slope-aList[i].slope))
-        else:
-            output.append(FinModel(0,1,aList[i].start,aList[i].slope-aList[i-1].slope))
+    if len(aList)>1:
+        #pre processing the first two slopes
+        process_first_two(aList)
+        #1(0,1)2(-1,0)3(0,-1)4(1,0)
+        for i in range(2,len(aList)):
+            if aList[i].slope-aList[i-1].slope<0:
+                output.append(FinModel(0,-1,aList[i].start,aList[i-1].slope-aList[i].slope))
+            else:
+                output.append(FinModel(0,1,aList[i].start,aList[i].slope-aList[i-1].slope))
 #process the first two slopes
 def process_first_two(aList):
     if aList[0].slope==0:
