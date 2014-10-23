@@ -1,4 +1,4 @@
-#create a finance model
+#payoff that we replicate from the given payoff
 class FinModel:
     def __init__(self,x,y,intersect=0,num_calls=1):
         self.x=x
@@ -19,7 +19,7 @@ class FinModel:
             return 'Buy %d put at strike price %d \n'%(self.num_calls,self.intersect)
     def __repr__(self):
         return self.__str__()
-#create a period, from start to end with a slope x. ex: from 0 to 100 the slope is 5
+#create a payoff period
 class SlopeModel:
     def __init__(self,start,end,slope):
         self.start=start
@@ -27,22 +27,22 @@ class SlopeModel:
         self.slope=slope  
 #used to store the output         
 output=[]
-#find the correct model combination for given graph
+#find the correct payoff combinations of given payoff
 def find_model(aList):
     global output
     i=0
     if len(aList)==1:
         one_slope_exist(aList)
-    #pre processing the first two slopes
+    #pre-processing the first two periods
     if len(aList)>1:
         process_first_two(aList)
-        #1(0,1)2(-1,0)3(0,-1)4(1,0)
+        #buy call(0,1) buy put(-1,0) sell call(0,-1) sell put(1,0)
         for i in range(2,len(aList)):
             if aList[i].slope-aList[i-1].slope<0:
                 output.append(FinModel(0,-1,aList[i].start,aList[i-1].slope-aList[i].slope))
             else:
                 output.append(FinModel(0,1,aList[i].start,aList[i].slope-aList[i-1].slope))
-#process the first two slopes
+#process the first two periods
 def process_first_two(aList):
     if aList[0].slope==0:
         if aList[1].slope>0:
@@ -55,7 +55,7 @@ def process_first_two(aList):
     else:
         output.append(FinModel(-1,0,aList[0].end,-aList[0].slope))
         output.append(FinModel(0,1,aList[0].end,aList[1].slope-aList[0].slope))
-#from start to end, there is only one kind of slope exist
+#from start to end, there is only one kind of payoff trend exist
 def one_slope_exist(aList):
     global output
     if aList[-1].slope==1:
@@ -68,7 +68,8 @@ def one_slope_exist(aList):
             #as default            
             output.append(FinModel(0,-1,aList[-1].end))
             #output.append(FinModel(0,1,aList[-1].end))
-#another way to read the input from user
+
+
 while True:
     aSlopeModelList=[]
     output=[]
